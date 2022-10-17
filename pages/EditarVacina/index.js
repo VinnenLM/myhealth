@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { RadioButton } from 'react-native-paper';
 import { StyleSheet, Modal, Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
 import MaskInput, { Masks } from 'react-native-mask-input';
+import { launchImageLibrary } from 'react-native-image-picker'
 
 export const EditarVacina = (props) => {
 
@@ -39,6 +40,16 @@ export const EditarVacina = (props) => {
         setId(props.route.params.item.id)
         setComprovante(props.route.params.item.comprovante)
     }, [props.route.params])
+
+    function selecionarComprovante() {
+        launchImageLibrary({ noData: true }, (response) => {
+            if (response) {
+                setComprovante(response.assets[0].uri);
+                console.log(response.assets[0].uri)
+            }
+        });
+    }
+
 
     const styles = StyleSheet.create({
         background: {
