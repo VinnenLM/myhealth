@@ -1,15 +1,22 @@
 import React, { useState } from 'react'
-import { Searchbar } from 'react-native-paper';
-import { StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
+import app from "../../config/firebase";
 
-export const RecuperarSenha = (props) => {
-    const showInicial = () => {
-        props.navigation.push('Inicial');
+export const RecuperarSenha = () => {
+
+    const [email, setEmail] = useState()
+
+    const recuperarSenha = () => {
+        const auth = getAuth(app);
+        sendPasswordResetEmail(auth, email)
+        .then((user) => {
+            console.log(JSON.stringify(user))
+        })
+        .catch((error) => {
+            console.log('Erro ao solicitar reset da senha: ' + error.message)
+        })
     }
-
-    const [searchQuery, setSearchQuery] = useState('');
-
-    const onChangeSearch = query => setSearchQuery(query);
 
     const styles = StyleSheet.create({
         background: {
@@ -61,10 +68,10 @@ export const RecuperarSenha = (props) => {
         <View style={styles.background}>
             <View style={styles.container}>
                 <Text style={styles.label}>Email</Text>
-                <TextInput style={styles.input}></TextInput>
+                <TextInput style={styles.input} value={email} onChangeText={setEmail} />
             </View>
-            <TouchableOpacity>
-                <Text style={[styles.btnRecuperar, styles.sombra]}>
+            <TouchableOpacity onPress={recuperarSenha}>
+                <Text style={[styles.btnRecuperar, styles.sombra]} >
                     Recuperar Senha
                 </Text>
             </TouchableOpacity>

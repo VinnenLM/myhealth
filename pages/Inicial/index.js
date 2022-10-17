@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
-import "../../config/firebase";
+import app from "../../config/firebase";
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { ActivityIndicator } from 'react-native-paper';
 
@@ -11,14 +11,14 @@ export const Inicial = (props) => {
     const [msg, setMsg] = useState('');
     const [isLoading, setLoading] = useState(false)
 
-    /*const autenticar = (event) => {
+    const autenticar = (event) => {
         event.preventDefault();
         console.log(email);
         console.log(senha);
 
         setLoading(true)
 
-        const auth = getAuth();
+        const auth = getAuth(app);
         signInWithEmailAndPassword(auth, email, senha)
             .then((user) => {
                 console.log(JSON.stringify(user))
@@ -31,7 +31,7 @@ export const Inicial = (props) => {
                 console.log("Erro ao autenticar: " + error)
                 setMsg('E-mail e/ou senha inválidos.')
             });
-    }*/
+    }
 
     const showHome = () => {
         props.navigation.navigate('HomeNavigator', { screen: 'Minhas Vacinas' });
@@ -148,11 +148,20 @@ export const Inicial = (props) => {
         },
         titulo: {
             flexDirection: 'row'
-        }
+        },
+        image: {
+            flex: 1,
+            justifyContent: "center",
+            height: 780,
+            width: '100%'
+          },
     });
 
     return (
         <View style={styles.background}>
+
+            <ImageBackground source={require('../../assets/imgs/fundo.jpg')} resizeMode="cover" style={styles.image} />
+
             <View style={styles.titulo}>
                 <Image source={require('../../assets/imgs/vacina.png')} style={{ height: '60%', width: 50, marginTop: 30, marginRight: 20 }} />
                 <Text style={styles.title}>My Health</Text>
@@ -172,7 +181,7 @@ export const Inicial = (props) => {
                 {msg !== '' && <Text style={styles.erro}>{msg}</Text>}
             </View>
             <View style={styles.btnContainer}>
-                <TouchableOpacity onPress={showHome}>
+                <TouchableOpacity onPress={autenticar}>
                     {
                         isLoading ?
                             <ActivityIndicator size={'small'} color={'white'} />

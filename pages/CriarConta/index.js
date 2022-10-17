@@ -1,10 +1,34 @@
 import React, { useState } from 'react'
 import { RadioButton } from 'react-native-paper';
-import { StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import app from "../../config/firebase";
+
 
 export const CriarConta = (props) => {
 
     const [checked, setChecked] = useState('');
+
+    const [email, setEmail] = useState()
+    const [senha, setSenha] = useState()
+    const [isLoading, setLoading] = useState(false)
+
+    const criarUsuario = () => {
+
+        setLoading(true)
+        const auth = getAuth(app);
+        createUserWithEmailAndPassword(auth, email, senha)
+            .then((userRecord) => {
+                console.log(JSON.stringify(userRecord))
+                setLoading(false)
+                props.navigation.pop()
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log("Ocorreu um erro ao cadastrar o usuário: " + error.message)
+            })
+    }
+
 
     const styles = StyleSheet.create({
         background: {
@@ -101,12 +125,12 @@ export const CriarConta = (props) => {
 
                 <View style={styles.container}>
                     <Text style={styles.label}>Email</Text>
-                    <TextInput style={styles.input}></TextInput>
+                    <TextInput style={styles.input} value={email} onChangeText={setEmail} />
                 </View>
 
                 <View style={styles.container}>
                     <Text style={styles.label}>Senha</Text>
-                    <TextInput style={styles.input}></TextInput>
+                    <TextInput style={styles.input} secureTextEntry={true} value={senha} onChangeText={setSenha} />
                 </View>
 
                 <View style={styles.container}>
@@ -116,7 +140,7 @@ export const CriarConta = (props) => {
 
             </View>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={criarUsuario}>
                 <Text style={[styles.btnCadastrar, styles.sombra]}>
                     Cadastrar
                 </Text>
