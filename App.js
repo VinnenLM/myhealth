@@ -23,6 +23,8 @@ const HomeNavigator = () => {
         options={{
           drawerIcon: () => <Image source={require('./assets/imgs/vacina.png')} style={{ height: '120%', width: '15%' }} />,
           headerStyle: { backgroundColor: '#c0e7e2' },
+          drawerActiveTintColor: "black",
+          drawerInactiveTintColor: "#429ed7",
           headerTintColor: '#add4d1',
           headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
         }} />
@@ -30,6 +32,8 @@ const HomeNavigator = () => {
       <Drawer.Screen name="Próximas Vacinas" component={ProximaVacina} options={{
         drawerIcon: () => <Image source={require('./assets/imgs/calendario.png')} style={{ height: '120%', width: '15%' }} />,
         headerStyle: { backgroundColor: '#c0e7e2' },
+        drawerActiveTintColor: "black",
+          drawerInactiveTintColor: "#429ed7",
         headerTintColor: '#add4d1',
         headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
       }} />

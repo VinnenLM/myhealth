@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Searchbar } from 'react-native-paper';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import CardVacina from '../../components/CardVacina';
+import CardProximaVacina from '../../components/CardProximaVacina';
 
 export const ProximaVacina = (props) => {
 
@@ -10,7 +11,8 @@ export const ProximaVacina = (props) => {
             id: 1,
             nome: 'BCG',
             data: '11/06/2022',
-            dose: 'Dose Única',
+            dose: 'Dose única',
+            comprovante: 'file:///data/user/0/com.myhealth/cache/rn_image_picker_lib_temp_fb48ec84-a75b-4c98-a896-0d1d6a72d901.jpg',
             proxima: ''
         },
         {
@@ -18,23 +20,11 @@ export const ProximaVacina = (props) => {
             nome: 'Febre Amarela',
             data: '05/10/2022',
             dose: '1a. dose',
+            comprovante: 'file:///data/user/0/com.myhealth/cache/rn_image_picker_lib_temp_fb48ec84-a75b-4c98-a896-0d1d6a72d901.jpg',
             proxima: '11/10/2023'
         },
-        {
-            id: 3,
-            nome: 'Hepatite B',
-            data: '11/08/2022',
-            dose: '1a. dose',
-            proxima: '11/10/2022'
-        },
-        {
-            id: 4,
-            nome: 'Poliomelite',
-            data: '11/08/2022',
-            dose: '1a. dose',
-            proxima: '11/10/2022'
-        }
     ]
+
 
     const showNovaVacina = () => {
         props.navigation.navigate('HomeNavigator', { screen: 'Nova Vacina' });
@@ -62,7 +52,7 @@ export const ProximaVacina = (props) => {
     return (
         <View style={styles.background}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                <FlatList data={listaVacinas} renderItem={({ item }) => <CardVacina item={item} navigation={props.navigation} />} keyExtractor={item => item.id} numColumns={2} />
+                <FlatList data={listaVacinas} renderItem={({ item }) => <CardProximaVacina item={item} navigation={props.navigation} />} keyExtractor={item => item.id} numColumns={1} />
             </View>
             <TouchableOpacity onPress={showNovaVacina}>
                 <Text style={[styles.btnNovaVacina, styles.shadow]}>
