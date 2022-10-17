@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
-import { Searchbar } from 'react-native-paper';
+import React from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import CardVacina from '../../components/CardVacina';
 import CardProximaVacina from '../../components/CardProximaVacina';
 
 export const ProximaVacina = (props) => {
@@ -41,7 +39,7 @@ export const ProximaVacina = (props) => {
             paddingVertical: 10,
             width: 180,
             color: 'white',
-            marginTop: 20,
+            marginTop: 400,
             marginBottom: 20,
             marginLeft: 'auto',
             marginRight: 'auto',
