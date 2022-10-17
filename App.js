@@ -107,8 +107,6 @@ const App = () => {
               headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
             }} />
 
-        {/* <Stack.Screen name="Nova Vacina" component={NovaVacina} /> */}
-
       </Stack.Navigator>
     </NavigationContainer>
   );
