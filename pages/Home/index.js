@@ -13,6 +13,7 @@ export const Home = (props) => {
             nome: 'BCG',
             data: '11/06/2022',
             dose: 'Dose única',
+            comprovante: 'file:///data/user/0/com.myhealth/cache/rn_image_picker_lib_temp_fb48ec84-a75b-4c98-a896-0d1d6a72d901.jpg',
             proxima: ''
         },
         {
@@ -20,46 +21,41 @@ export const Home = (props) => {
             nome: 'Febre Amarela',
             data: '05/10/2022',
             dose: '1a. dose',
+            comprovante: 'file:///data/user/0/com.myhealth/cache/rn_image_picker_lib_temp_fb48ec84-a75b-4c98-a896-0d1d6a72d901.jpg',
             proxima: '11/10/2023'
         },
-        {
-            id: 3,
-            nome: 'Hepatite B',
-            data: '11/08/2022',
-            dose: '1a. dose',
-            proxima: '11/10/2022'
-        },
-        {
-            id: 4,
-            nome: 'Poliomelite',
-            data: '11/08/2022',
-            dose: '1a. dose',
-            proxima: '11/10/2022'
-        }
     ]
-    
-    if(vacinas.length == 0){
+
+    if (vacinas.length == 0) {
         setVacinas(listaVacinas)
     }
 
     if (typeof props.route.params !== 'undefined') {
-        if (typeof props.route.params.idApagar !== 'undefined') {
-            var index = vacinas.findIndex((item) => item.id == props.route.params.idApagar)
-            if (index !== -1) {
-                vacinas.splice(index, 1);
-            }
-        }
-    }
-
-    if (typeof props.route.params !== 'undefined') {
         if (typeof props.route.params.itemAdicionar !== 'undefined') {
+            console.log(props.route.params.itemAdicionar);
             vacinas.push({
                 id: props.route.params.itemAdicionar.id,
                 nome: props.route.params.itemAdicionar.nome,
                 data: props.route.params.itemAdicionar.data,
                 dose: props.route.params.itemAdicionar.dose,
-                proxima: props.route.params.itemAdicionar.proxima
+                proxima: props.route.params.itemAdicionar.proxima,
+                comprovante: props.route.params.itemAdicionar.comprovante
             })
+        }
+        if (typeof props.route.params.itemEditar !== 'undefined') {
+            var index = vacinas.findIndex((item) => item.id == props.route.params.itemEditar.id)
+            if (index !== -1) {
+                let arrayTemporario = vacinas.slice();
+                arrayTemporario[index] = props.route.params.itemEditar;
+                setVacinas(arrayTemporario);
+                props.route.params.itemEditar = 'undefined';
+            }
+        }
+        if (typeof props.route.params.idApagar !== 'undefined') {
+            var index = vacinas.findIndex((item) => item.id == props.route.params.idApagar)
+            if (index !== -1) {
+                vacinas.splice(index, 1);
+            }
         }
     }
 

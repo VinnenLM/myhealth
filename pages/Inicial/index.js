@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
 import "../../config/firebase";
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
@@ -145,12 +145,16 @@ export const Inicial = (props) => {
         },
         erro: {
             color: 'red'
+        },
+        titulo: {
+            flexDirection: 'row'
         }
     });
 
     return (
         <View style={styles.background}>
-            <View>
+            <View style={styles.titulo}>
+                <Image source={require('../../assets/imgs/vacina.png')} style={{ height: '60%', width: 50, marginTop: 30, marginRight: 20 }} />
                 <Text style={styles.title}>My Health</Text>
             </View>
             <View>

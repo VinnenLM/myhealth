@@ -1,4 +1,4 @@
-import { Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 
 const CardVacina = (props) => {
 
@@ -11,6 +11,7 @@ const CardVacina = (props) => {
             <Text style={styles.nome}>{props.item.nome}</Text>
             <Text style={styles.dose}>{props.item.dose}</Text>
             <Text style={styles.dataDose}>{props.item.data}</Text>
+            <Image source={{uri: props.item.comprovante}} style={{width: 165, height: 60, marginLeft: 'auto', marginRight: 'auto'}}/>
             {(props.item.proxima != '') ?
                 <Text style={styles.proxDose}>Próxima dose em: {props.item.proxima}</Text>
                 :
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginVertical: 10,
         borderRadius: 10,
-        padding: 10,
+        padding: 5,
     },
     nome: {
         textAlign: 'center',

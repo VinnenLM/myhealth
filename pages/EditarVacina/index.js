@@ -1,14 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { RadioButton } from 'react-native-paper';
-import { StyleSheet, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Modal, Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
 import MaskInput, { Masks } from 'react-native-mask-input';
 
 export const EditarVacina = (props) => {
 
     function excluirVacina() {
         setModalVisible(!modalVisible)
-        console.log(props.route.params.item.id)
-        props.navigation.navigate('Minhas Vacinas', { idApagar: props.route.params.item.id })
+        props.navigation.navigate('Minhas Vacinas', { idApagar: id })
+    }
+
+    function editarVacina() {
+        props.navigation.navigate('Minhas Vacinas', {
+            itemEditar: {
+                id: id,
+                nome: nome,
+                data: dataVacina,
+                dose: checked,
+                proxima: proxVacina,
+                comprovante: comprovante,
+            }
+        })
     }
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -17,6 +29,7 @@ export const EditarVacina = (props) => {
     const [id, setId] = useState('');
     const [proxVacina, setProxVacina] = useState('');
     const [nome, setNome] = useState('');
+    const [comprovante, setComprovante] = useState('');
 
     useEffect(() => {
         setDataVacina(props.route.params.item.data)
@@ -24,6 +37,7 @@ export const EditarVacina = (props) => {
         setNome(props.route.params.item.nome)
         setChecked(props.route.params.item.dose)
         setId(props.route.params.item.id)
+        setComprovante(props.route.params.item.comprovante)
     }, [props.route.params])
 
     const styles = StyleSheet.create({
@@ -41,8 +55,11 @@ export const EditarVacina = (props) => {
             width: 252,
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginBottom: -20,
             flexWrap: "wrap"
+        },
+        containerRadios: {
+            flexDirection: 'row',
+            marginBottom: -10
         },
         label: {
             margin: 5,
@@ -59,7 +76,7 @@ export const EditarVacina = (props) => {
             paddingBottom: 5
         },
         btnSalvar: {
-            marginTop: 50,
+            marginTop: 10,
             backgroundColor: 'green',
             textAlign: 'center',
             paddingVertical: 10,
@@ -68,7 +85,7 @@ export const EditarVacina = (props) => {
             fontSize: 15,
         },
         btnExcluir: {
-            marginTop: 100,
+            marginTop: 30,
             backgroundColor: '#fc7879',
             textAlign: 'center',
             paddingVertical: 5,
@@ -134,7 +151,22 @@ export const EditarVacina = (props) => {
             marginBottom: 10,
             textAlign: "center",
             color: '#ff8383'
-        }
+        },
+        brnComprovante: {
+            backgroundColor: '#419ed7',
+            textAlign: 'center',
+            paddingVertical: 10,
+            width: 150,
+            color: 'white',
+            fontSize: 15,
+        },
+        containerImagem: {
+            width: 249,
+            textAlign: 'center',
+            flexDirection: 'column',
+            color: 'white',
+            fontSize: 15,
+        },
 
     });
 
@@ -190,7 +222,7 @@ export const EditarVacina = (props) => {
                 <View style={styles.container}>
                     <Text style={styles.label}>Dose</Text>
                     <View style={styles.containerRadio}>
-                        <View style={styles.container}>
+                        <View style={styles.containerRadios}>
                             <RadioButton
                                 value="1a. dose"
                                 color="#419ed7"
@@ -199,16 +231,16 @@ export const EditarVacina = (props) => {
                             />
                             <Text style={styles.label}>1a. dose</Text>
                         </View>
-                        <View style={styles.container}>
+                        <View style={styles.containerRadios}>
                             <RadioButton
                                 value="2a. dose"
                                 color="#419ed7"
                                 status={checked === '2a. dose' ? 'checked' : 'unchecked'}
                                 onPress={() => setChecked('2a. dose')}
                             />
-                            <Text style={styles.label}>2a. dose</Text>
+                            <Text style={{ width: 75,margin: 5, color: 'white', fontSize: 15, marginLeft: 'auto', }}>2a. dose</Text>
                         </View>
-                        <View style={styles.container}>
+                        <View style={styles.containerRadios}>
                             <RadioButton
                                 value="3a. dose"
                                 color="#419ed7"
@@ -217,7 +249,7 @@ export const EditarVacina = (props) => {
                             />
                             <Text style={styles.label}>3a. dose</Text>
                         </View>
-                        <View style={styles.container}>
+                        <View style={styles.containerRadios}>
                             <RadioButton
                                 value="Dose única"
                                 color="#419ed7"
@@ -231,7 +263,24 @@ export const EditarVacina = (props) => {
 
                 <View style={styles.container}>
                     <Text style={styles.label}>Comprovante</Text>
-                    <TextInput style={styles.input}></TextInput>
+
+                    <View style={styles.containerImagem}>
+                        <TouchableOpacity onPress={() => selecionarComprovante()}>
+                            <Text style={[styles.brnComprovante, styles.sombra]}>
+                                Selecionar Imagem
+                            </Text>
+                        </TouchableOpacity>
+                        {
+                            (comprovante != '')
+                                ?
+                                <Image source={{ uri: comprovante }} style={{ marginTop: 20, width: 200, height: 100 }} />
+                                :
+                                setComprovante('file:///data/user/0/com.myhealth/cache/rn_image_picker_lib_temp_91975286-39bb-4c9d-a700-7203ded35886.jpg') &&
+                                <Image source={{ uri: comprovante }} style={{ marginTop: 20, width: 200, height: 100 }} />
+                        }
+
+                    </View>
+
                 </View>
 
                 <View style={styles.container}>
@@ -246,7 +295,7 @@ export const EditarVacina = (props) => {
 
             </View>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => editarVacina()}>
                 <Text style={[styles.btnSalvar, styles.sombra]}>
                     Salvar Alterações
                 </Text>
