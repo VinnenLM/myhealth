@@ -1,6 +1,7 @@
 import React from 'react'
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 import CardProximaVacina from '../../components/CardProximaVacina';
+import styles from './styles'
 
 export const ProximaVacina = (props) => {
 
@@ -27,25 +28,6 @@ export const ProximaVacina = (props) => {
     const showNovaVacina = () => {
         props.navigation.navigate('HomeNavigator', { screen: 'Nova Vacina' });
     }
-
-    const styles = StyleSheet.create({
-        background: {
-            backgroundColor: '#add4d1',
-            flex: 1
-        },
-        btnNovaVacina: {
-            backgroundColor: 'green',
-            textAlign: 'center',
-            paddingVertical: 10,
-            width: 180,
-            color: 'white',
-            marginTop: 400,
-            marginBottom: 20,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            fontSize: 20,
-        },
-    });
 
     return (
         <View style={styles.background}>

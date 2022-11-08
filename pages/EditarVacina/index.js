@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { RadioButton } from 'react-native-paper';
-import { StyleSheet, Modal, Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
+import { Modal, Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
 import MaskInput, { Masks } from 'react-native-mask-input';
 import { launchImageLibrary } from 'react-native-image-picker'
+import styles from './styles'
 
 export const EditarVacina = (props) => {
 
@@ -49,137 +50,6 @@ export const EditarVacina = (props) => {
             }
         });
     }
-
-
-    const styles = StyleSheet.create({
-        background: {
-            backgroundColor: '#add4d1',
-            flex: 1,
-            alignItems: "center",
-            paddingTop: 30
-        },
-        container: {
-            flexDirection: 'row',
-            marginBottom: 20,
-        },
-        containerRadio: {
-            width: 252,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            flexWrap: "wrap"
-        },
-        containerRadios: {
-            flexDirection: 'row',
-            marginBottom: -10
-        },
-        label: {
-            margin: 5,
-            color: 'white',
-            fontSize: 15,
-            marginLeft: 'auto',
-        },
-        input: {
-            backgroundColor: 'white',
-            width: 250,
-            height: 30,
-            fontSize: 15,
-            color: '#499dcd',
-            paddingBottom: 5
-        },
-        btnSalvar: {
-            marginTop: 10,
-            backgroundColor: 'green',
-            textAlign: 'center',
-            paddingVertical: 10,
-            width: 150,
-            color: 'white',
-            fontSize: 15,
-        },
-        btnExcluir: {
-            marginTop: 30,
-            backgroundColor: '#fc7879',
-            textAlign: 'center',
-            paddingVertical: 5,
-            width: 100,
-            color: 'white',
-            fontSize: 15,
-            shadowColor: 'black',
-        },
-        sombra: {
-            shadowColor: "#000",
-            shadowOffset: {
-                width: 0,
-                height: 5,
-            },
-            shadowOpacity: 0.5,
-            shadowRadius: 7,
-            elevation: 15,
-        },
-        centeredView: {
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 22
-        },
-        modalView: {
-            margin: 20,
-            backgroundColor: "white",
-            padding: 15,
-            alignItems: "center",
-            shadowColor: "#000",
-            shadowOffset: {
-                width: 0,
-                height: 2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 5
-        },
-        modalButtons: {
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-        },
-        button: {
-            width: 120,
-            padding: 10,
-            elevation: 2,
-            margin: 10
-        },
-        buttonAceitar: {
-            backgroundColor: "#ff8383",
-        },
-        buttonCancelar: {
-            backgroundColor: "#3f92c6",
-        },
-        textStyle: {
-            color: "white",
-            fontWeight: "bold",
-            textAlign: "center"
-        },
-        modalText: {
-            fontSize: 20,
-            width: 250,
-            marginBottom: 10,
-            textAlign: "center",
-            color: '#ff8383'
-        },
-        brnComprovante: {
-            backgroundColor: '#419ed7',
-            textAlign: 'center',
-            paddingVertical: 10,
-            width: 150,
-            color: 'white',
-            fontSize: 15,
-        },
-        containerImagem: {
-            width: 249,
-            textAlign: 'center',
-            flexDirection: 'column',
-            color: 'white',
-            fontSize: 15,
-        },
-
-    });
 
     return (
 
@@ -249,7 +119,7 @@ export const EditarVacina = (props) => {
                                 status={checked === '2a. dose' ? 'checked' : 'unchecked'}
                                 onPress={() => setChecked('2a. dose')}
                             />
-                            <Text style={{ width: 75,margin: 5, color: 'white', fontSize: 15, marginLeft: 'auto', }}>2a. dose</Text>
+                            <Text style={{ width: 75, margin: 5, color: 'white', fontSize: 15, marginLeft: 'auto', }}>2a. dose</Text>
                         </View>
                         <View style={styles.containerRadios}>
                             <RadioButton

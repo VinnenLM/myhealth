@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
 import app from "../../config/firebase";
+import styles from './styles'
 
 export const RecuperarSenha = () => {
 
@@ -17,52 +18,6 @@ export const RecuperarSenha = () => {
             console.log('Erro ao solicitar reset da senha: ' + error.message)
         })
     }
-
-    const styles = StyleSheet.create({
-        background: {
-            backgroundColor: '#add4d1',
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-        },
-        container: {
-            flexDirection: 'row',
-            
-        },
-        label: {
-            textAlignVertical: 'center',
-            margin: 5,
-            color: 'white',
-            fontSize: 20
-        },
-        input: {
-            backgroundColor: 'white',
-            width: 300,
-            fontSize: 20,
-            color: '#499dcd'
-        },
-        btnRecuperar: {
-            marginTop: 120,
-            backgroundColor: 'green',
-            textAlign: 'center',
-            paddingVertical: 10,
-            paddingHorizontal: 32,
-            width: 220,
-            color: 'white',
-            fontSize: 20,
-            shadowColor: 'black',
-        },
-        sombra: {
-            shadowColor: "#000",
-            shadowOffset: {
-                width: 0,
-                height: 5,
-            },
-            shadowOpacity: 0.5,
-            shadowRadius: 7,
-            elevation: 15,
-        }
-    });
 
     return (
         <View style={styles.background}>

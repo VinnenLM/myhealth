@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { RadioButton } from 'react-native-paper';
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import MaskInput, { Masks } from 'react-native-mask-input';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import { launchImageLibrary } from 'react-native-image-picker'
+import styles from './styles'
 
 export const NovaVacina = (props) => {
 
@@ -39,78 +40,6 @@ export const NovaVacina = (props) => {
             }
         });
     }
-
-
-    const styles = StyleSheet.create({
-        background: {
-            backgroundColor: '#add4d1',
-            flex: 1,
-            alignItems: "center",
-            paddingTop: 30
-        },
-        container: {
-            flexDirection: 'row',
-            marginBottom: 20,
-        },
-        containerRadio: {
-            width: 252,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            flexWrap: "wrap"
-        },
-        containerRadios: {
-            flexDirection: 'row',
-            marginBottom: -10
-        },
-        label: {
-            margin: 5,
-            color: 'white',
-            fontSize: 15,
-            marginLeft: 'auto',
-        },
-        input: {
-            backgroundColor: 'white',
-            width: 250,
-            height: 30,
-            fontSize: 15,
-            color: '#499dcd',
-            paddingBottom: 5
-        },
-        btnCadastrar: {
-            marginTop: 50,
-            backgroundColor: 'green',
-            textAlign: 'center',
-            paddingVertical: 10,
-            width: 150,
-            color: 'white',
-            fontSize: 15,
-        },
-        btnComprovante: {
-            backgroundColor: '#419ed7',
-            textAlign: 'center',
-            paddingVertical: 10,
-            width: 150,
-            color: 'white',
-            fontSize: 15,
-        },
-        containerImagem: {
-            width: 249,
-            textAlign: 'center',
-            flexDirection: 'column',
-            color: 'white',
-            fontSize: 15,
-        },
-        sombra: {
-            shadowColor: "#000",
-            shadowOffset: {
-                width: 0,
-                height: 5,
-            },
-            shadowOpacity: 0.5,
-            shadowRadius: 7,
-            elevation: 15,
-        }
-    });
 
     return (
         <View style={styles.background}>

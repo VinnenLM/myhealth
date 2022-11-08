@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Searchbar } from 'react-native-paper';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 import CardVacina from '../../components/CardVacina';
+import styles from './styles'
 
 export const Home = (props) => {
 
@@ -66,40 +67,6 @@ export const Home = (props) => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const onChangeSearch = query => setSearchQuery(query);
-
-    const styles = StyleSheet.create({
-        background: {
-            backgroundColor: '#add4d1',
-            flex: 1
-        },
-        title: {
-            textAlign: 'center',
-            fontSize: 40,
-            marginTop: 30,
-            color: '#429ed7',
-            fontWeight: 'bold',
-            textDecorationLine: 'underline'
-        },
-        btnNovaVacina: {
-            backgroundColor: 'green',
-            textAlign: 'center',
-            paddingVertical: 10,
-            width: 180,
-            color: 'white',
-            marginTop: 20,
-            marginBottom: 20,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            fontSize: 20,
-        },
-        srcBar: {
-            width: '95%',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            marginTop: 20,
-            marginBottom: 20,
-        }
-    });
 
     return (
         <View style={styles.background}>
