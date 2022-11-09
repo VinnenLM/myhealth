@@ -4,15 +4,15 @@ import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
 import app from "../../config/firebase";
 import styles from './styles'
 
-export const RecuperarSenha = () => {
+export const RecuperarSenha = (props) => {
 
     const [email, setEmail] = useState()
 
     const recuperarSenha = () => {
         const auth = getAuth(app);
         sendPasswordResetEmail(auth, email)
-        .then((user) => {
-            console.log(JSON.stringify(user))
+        .then(() => {
+            props.navigation.pop()
         })
         .catch((error) => {
             console.log('Erro ao solicitar reset da senha: ' + error.message)
