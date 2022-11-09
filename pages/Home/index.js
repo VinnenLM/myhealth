@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { Searchbar } from 'react-native-paper';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 import CardVacina from '../../components/CardVacina';
-import styles from './styles'
+import styles from './styles';
+import PlaceHolder from '../../assets/imgs/placeholder.jpg'
 
 export const Home = (props) => {
 

@@ -4,8 +4,9 @@ import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import MaskInput, { Masks } from 'react-native-mask-input';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
-import { launchImageLibrary } from 'react-native-image-picker'
-import styles from './styles'
+import { launchImageLibrary } from 'react-native-image-picker';
+import styles from './styles';
+import PlaceHolder from '../../assets/imgs/placeholder.jpg'
 
 export const NovaVacina = (props) => {
 
@@ -119,8 +120,7 @@ export const NovaVacina = (props) => {
                                 ?
                                 <Image source={{ uri: comprovante }} style={{ marginTop: 20, width: 200, height: 100 }} />
                                 :
-                                setComprovante('file:///data/user/0/com.myhealth/cache/rn_image_picker_lib_temp_91975286-39bb-4c9d-a700-7203ded35886.jpg') &&
-                                <Image source={{ uri: comprovante }} style={{ marginTop: 20, width: 200, height: 100 }} />
+                                <Image source={PlaceHolder} style={{ marginTop: 20, width: 200, height: 100 }} />
                         }
 
                     </View>

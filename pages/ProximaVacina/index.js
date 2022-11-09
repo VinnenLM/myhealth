@@ -24,7 +24,6 @@ export const ProximaVacina = (props) => {
         },
     ]
 
-
     const showNovaVacina = () => {
         props.navigation.navigate('HomeNavigator', { screen: 'Nova Vacina' });
     }
