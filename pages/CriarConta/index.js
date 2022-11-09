@@ -2,31 +2,40 @@ import React, { useState } from 'react'
 import { RadioButton } from 'react-native-paper';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-import app from "../../config/firebase";
+import { app, db } from "../../config/firebase";
 import styles from './styles.js'
+import MaskInput, { Masks } from 'react-native-mask-input';
+import { doc, setDoc } from 'firebase/firestore';
 
 export const CriarConta = (props) => {
 
-    const [checked, setChecked] = useState('');
-
-    const [email, setEmail] = useState()
-    const [senha, setSenha] = useState()
-    const [isLoading, setLoading] = useState(false)
+    const [email, setEmail] = useState();
+    const [senha, setSenha] = useState();
+    const [repetirSenha, setRepetirSenha] = useState();
+    const [nome, setNome] = useState();
+    const [sexo, setSexo] = useState();
+    const [dataNascimento, setDataNascimento] = useState();
 
     const criarUsuario = () => {
 
-        setLoading(true)
         const auth = getAuth(app);
         createUserWithEmailAndPassword(auth, email, senha)
             .then((userRecord) => {
-                console.log(JSON.stringify(userRecord))
-                setLoading(false)
+                salvarUsuario(JSON.stringify(userRecord.user.uid))
                 props.navigation.pop()
             })
             .catch((error) => {
-                setLoading(false)
-                console.log("Ocorreu um erro ao cadastrar o usuário: " + error.message)
+                console.log("Ocorreu um erro ao cadastrar o usuário: " + error)
             })
+    }
+
+    const salvarUsuario = (id) => {
+        setDoc(doc(db, "User", id), {
+            nome: nome,
+            email: email,
+            sexo: sexo,
+            dataNascimento: dataNascimento
+        });
     }
 
     return (
@@ -36,7 +45,7 @@ export const CriarConta = (props) => {
 
                 <View style={styles.container}>
                     <Text style={styles.label}>Nome completo</Text>
-                    <TextInput style={styles.input}></TextInput>
+                    <TextInput style={styles.input} value={nome} onChangeText={setNome}></TextInput>
                 </View>
 
                 <View style={styles.container}>
@@ -46,8 +55,8 @@ export const CriarConta = (props) => {
                             <RadioButton
                                 value="masculino"
                                 color="#419ed7"
-                                status={checked === 'first' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked('first')}
+                                status={sexo === 'masculino' ? 'checked' : 'unchecked'}
+                                onPress={() => setSexo('masculino')}
                             />
                             <Text style={styles.label}>Masculino</Text>
                         </View>
@@ -55,8 +64,8 @@ export const CriarConta = (props) => {
                             <RadioButton
                                 value="feminino"
                                 color="#419ed7"
-                                status={checked === 'second' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked('second')}
+                                status={sexo === 'feminino' ? 'checked' : 'unchecked'}
+                                onPress={() => setSexo('feminino')}
                             />
                             <Text style={styles.label}>Feminino</Text>
                         </View>
@@ -64,8 +73,13 @@ export const CriarConta = (props) => {
                 </View>
 
                 <View style={styles.container}>
-                    <Text style={styles.label}>Data nascimento</Text>
-                    <TextInput style={styles.input}></TextInput>
+                    <Text style={styles.label}>Data Nascimento</Text>
+                    <MaskInput
+                        style={styles.input}
+                        value={dataNascimento}
+                        onChangeText={setDataNascimento}
+                        mask={Masks.DATE_DDMMYYYY}
+                    />
                 </View>
 
                 <View style={styles.container}>
@@ -80,7 +94,7 @@ export const CriarConta = (props) => {
 
                 <View style={styles.container}>
                     <Text style={styles.label}>Repetir Senha</Text>
-                    <TextInput style={styles.input}></TextInput>
+                    <TextInput style={styles.input} secureTextEntry={true} value={repetirSenha} onChangeText={setRepetirSenha}></TextInput>
                 </View>
 
             </View>
