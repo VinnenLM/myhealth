@@ -1,28 +1,41 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
-import app from "../../config/firebase";
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { ActivityIndicator } from 'react-native-paper';
 import styles from './styles'
+
+import { useDispatch, useSelector } from 'react-redux';
+import { reducerSetUsuario } from '../../redux/usuarioSlice';
+
+import { app, db } from "../../config/firebase";
+import { collection, doc, documentId, getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore';
 
 export const Inicial = (props) => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [msg, setMsg] = useState('');
-    const [isLoading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
 
-    const autenticar = (event) => {
-        event.preventDefault();
-        console.log(email);
-        console.log(senha);
+    const dispatch = useDispatch();
+    //dispatch(reducerSetUsuario({ nome: doc.data().nome, id: doc.id }))
 
+    const buscarUsuario = (id) => {
+        getDoc(doc(db, "User",`"${id}"`))
+        .then((doc) => {
+            dispatch(reducerSetUsuario({ nome: doc.data().nome, id: doc.id }))
+        })
+        .catch((error) => {
+            console.log("Erro: " + error)
+        })
+    }
+
+    const autenticar = () => {
         setLoading(true)
-
         const auth = getAuth(app);
         signInWithEmailAndPassword(auth, email, senha)
-            .then((user) => {
-                console.log(JSON.stringify(user))
+            .then((res) => {
+                buscarUsuario(res.user.uid)
                 setMsg('Deu bom')
                 setLoading(false)
                 showHome()
@@ -72,7 +85,7 @@ export const Inicial = (props) => {
             <View style={styles.btnContainer}>
                 <TouchableOpacity onPress={autenticar}>
                     {
-                        isLoading ?
+                        loading ?
                             <ActivityIndicator size={'small'} color={'white'} />
                             :
                             <Text style={[styles.btnEntrar, styles.shadow]}>

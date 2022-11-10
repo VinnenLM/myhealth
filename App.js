@@ -11,10 +11,13 @@ import { NovaVacina } from './pages/NovaVacina';
 import { Image } from 'react-native';
 import { EditarVacina } from './pages/EditarVacina';
 import { ProximaVacina } from './pages/ProximaVacina';
+import { Provider } from 'react-redux'
+import { store } from './redux/store'
 
 const HomeNavigator = () => {
   const Drawer = createDrawerNavigator()
   return (
+
     <Drawer.Navigator drawerContent={(props) => <CustomDrawer {...props} />}>
 
       <Drawer.Screen
@@ -33,7 +36,7 @@ const HomeNavigator = () => {
         drawerIcon: () => <Image source={require('./assets/imgs/calendario.png')} style={{ height: '120%', width: '15%' }} />,
         headerStyle: { backgroundColor: '#c0e7e2' },
         drawerActiveTintColor: "black",
-          drawerInactiveTintColor: "#429ed7",
+        drawerInactiveTintColor: "#429ed7",
         headerTintColor: '#add4d1',
         headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
       }} />
@@ -72,43 +75,48 @@ const App = () => {
   const Stack = createNativeStackNavigator()
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
 
-        <Stack.Screen
-          name="Inicial"
-          component={Inicial}
-          options={
-            {
-              title: 'Tela Inicial',
-              headerStyle: { backgroundColor: '#c0e7e2' },
-              headerTintColor: 'white',
-              headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
-              headerShown: false
-            }} />
+    <Provider store={store}>
 
-        <Stack.Screen name="HomeNavigator" component={HomeNavigator} options={{ headerShown: false }} />
+      <NavigationContainer>
+        <Stack.Navigator>
 
-        <Stack.Screen name="Criar Conta" component={CriarConta}
-          options={
-            {
-              title: 'MyHealth',
-              headerStyle: { backgroundColor: '#c0e7e2' },
-              headerTintColor: 'white',
-              headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
-            }} />
+          <Stack.Screen
+            name="Inicial"
+            component={Inicial}
+            options={
+              {
+                title: 'Tela Inicial',
+                headerStyle: { backgroundColor: '#c0e7e2' },
+                headerTintColor: 'white',
+                headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
+                headerShown: false
+              }} />
 
-        <Stack.Screen name="Recuperar Senha" component={RecuperarSenha}
-          options={
-            {
-              title: 'MyHealth',
-              headerStyle: { backgroundColor: '#c0e7e2' },
-              headerTintColor: 'white',
-              headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
-            }} />
+          <Stack.Screen name="HomeNavigator" component={HomeNavigator} options={{ headerShown: false }} />
 
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen name="Criar Conta" component={CriarConta}
+            options={
+              {
+                title: 'MyHealth',
+                headerStyle: { backgroundColor: '#c0e7e2' },
+                headerTintColor: 'white',
+                headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
+              }} />
+
+          <Stack.Screen name="Recuperar Senha" component={RecuperarSenha}
+            options={
+              {
+                title: 'MyHealth',
+                headerStyle: { backgroundColor: '#c0e7e2' },
+                headerTintColor: 'white',
+                headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
+              }} />
+
+        </Stack.Navigator>
+      </NavigationContainer>
+
+    </Provider>
   );
 };
 

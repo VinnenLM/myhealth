@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text, View } from "react-native";
+import { useSelector } from 'react-redux';
 
 const styles = StyleSheet.create({
     container: {
@@ -21,9 +22,12 @@ const styles = StyleSheet.create({
 })
 
 export const UserHeader = () => {
+
+    const nome = useSelector((state) => state.usuario.nome)
+
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Olá Fulano</Text>
+            <Text style={styles.text}>Olá, {nome}</Text>
         </View>
     )
 }
