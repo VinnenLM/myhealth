@@ -13,7 +13,7 @@ const CardVacina = ({item}) => {
             <Text style={styles.dataDose}>{item.dataVacina}</Text>
             <Image source={{uri: item.comprovante}} style={{width: 165, height: 60, marginLeft: 'auto', marginRight: 'auto'}}/>
             {(item.proxVacina) ?
-                <Text style={styles.proxDose}>Próxima dose em: {item.proximaVacina}</Text>
+                <Text style={styles.proxDose}>Próxima dose em: {item.proxVacina}</Text>
                 :
                 <Text style={styles.proxDose}>Não há próxima dose</Text>
             }

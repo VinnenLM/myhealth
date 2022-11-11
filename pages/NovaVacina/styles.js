@@ -44,7 +44,16 @@ export default StyleSheet.create({
         color: 'white',
         fontSize: 15,
     },
-    btnComprovante: {
+    btnTirarFoto: {
+        backgroundColor: '#419ed7',
+        textAlign: 'center',
+        paddingVertical: 10,
+        width: 150,
+        color: 'white',
+        fontSize: 15,
+        marginBottom: 10
+    },
+    btnSelecionarFoto: {
         backgroundColor: '#419ed7',
         textAlign: 'center',
         paddingVertical: 10,
@@ -57,7 +66,7 @@ export default StyleSheet.create({
         textAlign: 'center',
         flexDirection: 'column',
         color: 'white',
-        fontSize: 15,
+        fontSize: 15
     },
     sombra: {
         shadowColor: "#000",

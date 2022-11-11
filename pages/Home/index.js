@@ -5,6 +5,7 @@ import CardVacina from '../../components/CardVacina';
 import styles from './styles';
 import { db } from '../../config/firebase';
 import { collection, onSnapshot, query } from 'firebase/firestore';
+import { useSelector } from 'react-redux';
 
 export const Home = (props) => {
 
@@ -12,20 +13,26 @@ export const Home = (props) => {
 
     useEffect(() => {
 
-        const colecaoVacinas = []
+        props.navigation.addListener('focus',() =>{
 
-        const q = query(collection(db, "MyHealth"));
+            setVacinas([]);
+            const colecaoVacinas = []
 
-        onSnapshot(q, (result) => {
-            result.forEach((doc) => {
-                const myDoc = {
-                    ...doc.data(),
-                    id: doc.id
-                }
-                colecaoVacinas.push(myDoc)
+            const q = query(collection(db, "MyHealth"));
+    
+            onSnapshot(q, (result) => {
+                result.forEach((doc) => {
+                    colecaoVacinas.push({
+                        ...doc.data(),
+                        id: doc.id
+                    })
+                });
+                setVacinas(colecaoVacinas)
             });
-            setVacinas(colecaoVacinas)
+
         });
+
+        
     }, []);
 
     const showNovaVacina = () => {
