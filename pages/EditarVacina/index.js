@@ -2,53 +2,109 @@ import React, { useEffect, useState } from 'react'
 import { RadioButton } from 'react-native-paper';
 import { Modal, Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
 import MaskInput, { Masks } from 'react-native-mask-input';
-import { launchImageLibrary } from 'react-native-image-picker'
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
 import styles from './styles'
+import { useSelector } from 'react-redux';
+import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db, storage } from '../../config/firebase'
+import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 export const EditarVacina = (props) => {
 
-    function excluirVacina() {
-        setModalVisible(!modalVisible)
-        props.navigation.navigate('Minhas Vacinas', { idApagar: id })
+
+    const editarVacina = async () => {
+        const file = await fetch(comprovante)
+        const blob = await file.blob()
+
+        uploadBytes(ref(storage, pathFoto), blob)
+            .then((resposta) => {
+                getDownloadURL(ref(storage, resposta.ref.fullPath))
+                    .then((urlDownload) => {
+                        updateDoc(doc(db, "MyHealth", idVacina), {
+                            nome: nome,
+                            dataVacina: dataVacina,
+                            dose: dose,
+                            proxVacina: proxVacina,
+                            comprovante: urlDownload,
+                            pathFoto: pathFoto,
+                            idUsuario: idUsuario
+                        })
+                            .then((retorno) => {
+                                props.navigation.navigate('Minhas Vacinas')
+                            })
+                            .catch((error) => {
+                                console.log("Error: " + error)
+                            })
+                    })
+            })
     }
 
-    function editarVacina() {
-        props.navigation.navigate('Minhas Vacinas', {
-            itemEditar: {
-                id: id,
-                nome: nome,
-                data: dataVacina,
-                dose: checked,
-                proxima: proxVacina,
-                comprovante: comprovante,
-            }
-        })
+    const excluirVacina = () => {
+
+        setModalVisible(!modalVisible)
+
+        console.log(idVacina);
+        console.log(pathFoto);
+
+        deleteObject(ref(storage, pathFoto))
+            .then(() => {
+                deleteDoc(doc(db, "MyHealth", idVacina))
+                    .then(() => {
+                        props.navigation.navigate('Minhas Vacinas')
+                    })
+            })
+            .catch((error) => {
+                console.log("Erro ao excluir a imagem.")
+            })
+
+
     }
+
+    const idUsuario = useSelector((state) => state.usuario.id)
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [checked, setChecked] = useState('');
+    const [idVacina, setIdVacina] = useState('');
+    const [dose, setDose] = useState('');
     const [dataVacina, setDataVacina] = useState('');
-    const [id, setId] = useState('');
     const [proxVacina, setProxVacina] = useState('');
     const [nome, setNome] = useState('');
     const [comprovante, setComprovante] = useState('');
+    const [pathFoto, setPathFoto] = useState('');
 
     useEffect(() => {
-        setDataVacina(props.route.params.item.data)
-        setProxVacina((props.route.params.item.proxima) ? (props.route.params.item.proxima) : '')
-        setNome(props.route.params.item.nome)
-        setChecked(props.route.params.item.dose)
-        setId(props.route.params.item.id)
-        setComprovante(props.route.params.item.comprovante)
-    }, [props.route.params])
+        getDoc(doc(db, "MyHealth", `${props.route.params.id}`))
+            .then((doc) => {
+                setIdVacina(props.route.params.id)
+                setDataVacina(doc.data().dataVacina)
+                setProxVacina((doc.data().proxVacina) ? (doc.data().proxVacina) : '')
+                setNome(doc.data().nome)
+                setDose(doc.data().dose)
+                setComprovante(doc.data().comprovante)
+                setPathFoto(doc.data().pathFoto)
+            })
+            .catch((error) => {
+                console.log("Erro: " + error)
+            })
+    }, [props.route.params.id])
 
-    function selecionarComprovante() {
-        launchImageLibrary({ noData: true }, (response) => {
-            if (response) {
-                setComprovante(response.assets[0].uri);
-                console.log(response.assets[0].uri)
-            }
-        });
+    const showImagePicker = () => {
+        launchImageLibrary()
+            .then((result) => {
+                setComprovante(result.assets[0].uri)
+            })
+            .catch((error) => {
+                console.log("Erro ao capturar imagem: " + error)
+            })
+    }
+
+    const showCamera = () => {
+        launchCamera()
+            .then((result) => {
+                setComprovante(result.assets[0].uri)
+            })
+            .catch((error) => {
+                console.log("Erro ao capturar imagem: " + error)
+            })
     }
 
     return (
@@ -69,7 +125,7 @@ export const EditarVacina = (props) => {
                         <View style={styles.modalButtons}>
                             <TouchableOpacity
                                 style={[styles.button, styles.buttonAceitar]}
-                                onPress={() => excluirVacina(id)}>
+                                onPress={() => excluirVacina()}>
                                 <Text style={styles.textStyle}>SIM</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
@@ -107,8 +163,8 @@ export const EditarVacina = (props) => {
                             <RadioButton
                                 value="1a. dose"
                                 color="#419ed7"
-                                status={checked === '1a. dose' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked('1a. dose')}
+                                status={dose === '1a. dose' ? 'checked' : 'unchecked'}
+                                onPress={() => setDose('1a. dose')}
                             />
                             <Text style={styles.label}>1a. dose</Text>
                         </View>
@@ -116,8 +172,8 @@ export const EditarVacina = (props) => {
                             <RadioButton
                                 value="2a. dose"
                                 color="#419ed7"
-                                status={checked === '2a. dose' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked('2a. dose')}
+                                status={dose === '2a. dose' ? 'checked' : 'unchecked'}
+                                onPress={() => setDose('2a. dose')}
                             />
                             <Text style={{ width: 75, margin: 5, color: 'white', fontSize: 15, marginLeft: 'auto', }}>2a. dose</Text>
                         </View>
@@ -125,8 +181,8 @@ export const EditarVacina = (props) => {
                             <RadioButton
                                 value="3a. dose"
                                 color="#419ed7"
-                                status={checked === '3a. dose' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked('3a. dose')}
+                                status={dose === '3a. dose' ? 'checked' : 'unchecked'}
+                                onPress={() => setDose('3a. dose')}
                             />
                             <Text style={styles.label}>3a. dose</Text>
                         </View>
@@ -134,8 +190,8 @@ export const EditarVacina = (props) => {
                             <RadioButton
                                 value="Dose única"
                                 color="#419ed7"
-                                status={checked === 'Dose única' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked('Dose única')}
+                                status={dose === 'Dose única' ? 'checked' : 'unchecked'}
+                                onPress={() => setDose('Dose única')}
                             />
                             <Text style={styles.label}>Dose única</Text>
                         </View>
@@ -146,8 +202,13 @@ export const EditarVacina = (props) => {
                     <Text style={styles.label}>Comprovante</Text>
 
                     <View style={styles.containerImagem}>
-                        <TouchableOpacity onPress={() => selecionarComprovante()}>
-                            <Text style={[styles.brnComprovante, styles.sombra]}>
+                        <TouchableOpacity onPress={() => showCamera()}>
+                            <Text style={[styles.btnTirarFoto, styles.sombra]}>
+                                Tirar Foto
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => showImagePicker()}>
+                            <Text style={[styles.btnSelecionarFoto, styles.sombra]}>
                                 Selecionar Imagem
                             </Text>
                         </TouchableOpacity>

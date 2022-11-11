@@ -16,6 +16,8 @@ export const NovaVacina = (props) => {
 
     const idUsuario = useSelector((state) => state.usuario.id)
 
+    console.log(idUsuario);
+
     const salvarVacina = async () => {
 
         const file = await fetch(comprovante)
@@ -27,7 +29,6 @@ export const NovaVacina = (props) => {
             .then((resposta) => {
                 getDownloadURL(ref(storage, resposta.ref.fullPath))
                     .then((urlDownload) => {
-                        console.log("URL de download: " + urlDownload)
                         addDoc(collection(db, "MyHealth"), {
                             nome: nome,
                             dataVacina: dataVacina,

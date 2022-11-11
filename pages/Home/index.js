@@ -5,7 +5,6 @@ import CardVacina from '../../components/CardVacina';
 import styles from './styles';
 import { db } from '../../config/firebase';
 import { collection, onSnapshot, query } from 'firebase/firestore';
-import { useSelector } from 'react-redux';
 
 export const Home = (props) => {
 
