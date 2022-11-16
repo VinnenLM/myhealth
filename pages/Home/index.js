@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Searchbar } from 'react-native-paper';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import CardVacina from '../../components/CardVacina';
 import styles from './styles';
 import { db } from '../../config/firebase';
@@ -32,7 +32,7 @@ export const Home = (props) => {
         });
 
         
-    }, []);
+    }, [vacinas]);
 
     const showNovaVacina = () => {
         props.navigation.navigate('HomeNavigator', { screen: 'Nova Vacina' });
@@ -43,7 +43,7 @@ export const Home = (props) => {
     const onChangeSearch = query => setSearchQuery(query);
 
     return (
-        <View style={styles.background}>
+        <ScrollView horizontal={false} style={styles.background}>
             <Searchbar
                 icon={require('../../assets/imgs/lupa.png')}
                 style={styles.srcBar}
@@ -52,15 +52,15 @@ export const Home = (props) => {
                 value={searchQuery}
             />
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+            <ScrollView horizontal={true}>
                 <FlatList data={vacinas} renderItem={({ item }) => <CardVacina item={item} navigation={props.navigation} />} keyExtractor={item => item.id} numColumns={2} />
-            </View>
+            </ScrollView >
 
             <TouchableOpacity onPress={showNovaVacina}>
                 <Text style={[styles.btnNovaVacina, styles.shadow]}>
                     Nova Vacina
                 </Text>
             </TouchableOpacity>
-        </View>
+        </ScrollView>
     );
 }
