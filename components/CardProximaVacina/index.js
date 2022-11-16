@@ -7,13 +7,10 @@ const CardProximaVacina = (props) => {
     }
 
     return (
-        (props.item.proxima != '') ?
-            <TouchableOpacity style={styles.container} onPress={showEditarVacina}>
-                <Text style={styles.nome}>{props.item.nome}</Text>
-                <Text style={styles.proxDose}>{props.item.proxVacina}</Text>
-            </TouchableOpacity>
-            :
-            null
+        <TouchableOpacity style={styles.container} onPress={showEditarVacina}>
+            <Text style={styles.nome}>{props.item.nome}</Text>
+            <Text style={styles.proxDose}>{props.item.proxVacina}</Text>
+        </TouchableOpacity>
     )
 }
 
