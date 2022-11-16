@@ -3,7 +3,7 @@ import { Text, StyleSheet, TouchableOpacity } from 'react-native'
 const CardProximaVacina = (props) => {
 
     function showEditarVacina() {
-        props.navigation.navigate('Editar Vacina', { item: props.item })
+        props.navigation.navigate('Editar Vacina', { id: props.item.id })
     }
 
     return (
