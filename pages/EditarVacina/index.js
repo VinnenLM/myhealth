@@ -3,14 +3,14 @@ import { RadioButton } from 'react-native-paper';
 import { Modal, Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
 import MaskInput, { Masks } from 'react-native-mask-input';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
-import styles from './styles'
 import { useSelector } from 'react-redux';
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../../config/firebase'
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import PlaceHolder from '../../assets/imgs/placeholder.jpg'
+import styles from './styles'
 
 export const EditarVacina = (props) => {
-
 
     const editarVacina = async () => {
         const file = await fetch(comprovante)
@@ -43,9 +43,6 @@ export const EditarVacina = (props) => {
 
         setModalVisible(!modalVisible)
 
-        console.log(idVacina);
-        console.log(pathFoto);
-
         deleteObject(ref(storage, pathFoto))
             .then(() => {
                 deleteDoc(doc(db, "MyHealth", idVacina))
@@ -54,7 +51,7 @@ export const EditarVacina = (props) => {
                     })
             })
             .catch((error) => {
-                console.log("Erro ao excluir a imagem.")
+                console.log("Erro ao excluir a imagem." + error)
             })
 
 
@@ -114,11 +111,7 @@ export const EditarVacina = (props) => {
             <Modal
                 animationType="slide"
                 transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
-                    setModalVisible(!modalVisible);
-                }}>
+                visible={modalVisible}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Tem certeza que deseja remover essa vacina?</Text>
@@ -217,8 +210,7 @@ export const EditarVacina = (props) => {
                                 ?
                                 <Image source={{ uri: comprovante }} style={{ marginTop: 20, width: 200, height: 100 }} />
                                 :
-                                setComprovante('file:///data/user/0/com.myhealth/cache/rn_image_picker_lib_temp_91975286-39bb-4c9d-a700-7203ded35886.jpg') &&
-                                <Image source={{ uri: comprovante }} style={{ marginTop: 20, width: 200, height: 100 }} />
+                                <Image source={PlaceHolder} style={{ marginTop: 20, width: 200, height: 100 }} />
                         }
 
                     </View>
