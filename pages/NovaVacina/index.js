@@ -1,22 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RadioButton } from 'react-native-paper';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import MaskInput, { Masks } from 'react-native-mask-input';
-import styles from './styles';
-import PlaceHolder from '../../assets/imgs/placeholder.jpg'
-
 import { db, storage } from '../../config/firebase'
-import { addDoc, collection, doc, setDoc } from "firebase/firestore"
-
+import { addDoc, collection } from "firebase/firestore"
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage"
 import { useSelector } from 'react-redux';
+import PlaceHolder from '../../assets/imgs/placeholder.jpg'
+import styles from './styles';
 
 export const NovaVacina = (props) => {
 
     const idUsuario = useSelector((state) => state.usuario.id)
-
-    console.log(idUsuario);
 
     const salvarVacina = async () => {
 
@@ -71,6 +67,19 @@ export const NovaVacina = (props) => {
     const [dataVacina, setDataVacina] = useState('');
     const [proxVacina, setProxVacina] = useState('');
     const [comprovante, setComprovante] = useState('');
+
+    useEffect(() => {
+
+        props.navigation.addListener('focus', () => {
+            setDose('')
+            setNome('')
+            setDataVacina('')
+            setProxVacina('')
+            setComprovante('')
+        });
+
+    }, []);
+
 
     return (
         <View style={styles.background}>
