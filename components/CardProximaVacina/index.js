@@ -1,9 +1,13 @@
 import { Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { useDispatch } from 'react-redux';
+import { reducerSetVacina } from '../../redux/vacinaSlice'
 
 const CardProximaVacina = (props) => {
 
     function showEditarVacina() {
-        props.navigation.navigate('Editar Vacina', { id: props.item.id })
+        const dispatch = useDispatch();
+        dispatch(reducerSetVacina({ id: props.item.id }))
+        props.navigation.navigate('Editar Vacina')
     }
 
     return (

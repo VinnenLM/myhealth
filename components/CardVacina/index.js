@@ -1,9 +1,14 @@
 import { Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { useDispatch } from 'react-redux';
+import { reducerSetVacina } from '../../redux/vacinaSlice'
 
 const CardVacina = (props) => {
 
+    const dispatch = useDispatch();
+
     function showEditarVacina() {
-        props.navigation.navigate('Editar Vacina', {id: props.item.id})
+        dispatch(reducerSetVacina({ id: props.item.id }))
+        props.navigation.navigate('Editar Vacina')
     }
 
     return (
@@ -11,7 +16,7 @@ const CardVacina = (props) => {
             <Text style={styles.nome}>{props.item.nome}</Text>
             <Text style={styles.dose}>{props.item.dose}</Text>
             <Text style={styles.dataDose}>{props.item.dataVacina}</Text>
-            <Image source={{uri: props.item.comprovante}} style={{width: 165, height: 60, marginLeft: 'auto', marginRight: 'auto'}}/>
+            <Image source={{ uri: props.item.comprovante }} style={{ width: 165, height: 60, marginLeft: 'auto', marginRight: 'auto' }} />
             {(props.item.proxVacina) ?
                 <Text style={styles.proxDose}>Próxima dose em: {props.item.proxVacina}</Text>
                 :

@@ -12,6 +12,8 @@ import styles from './styles'
 
 export const EditarVacina = (props) => {
 
+    const idVacina = useSelector((state) => state.vacina.id)
+
     const editarVacina = async () => {
         const file = await fetch(comprovante)
         const blob = await file.blob()
@@ -60,7 +62,6 @@ export const EditarVacina = (props) => {
     const idUsuario = useSelector((state) => state.usuario.id)
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [idVacina, setIdVacina] = useState('');
     const [dose, setDose] = useState('');
     const [dataVacina, setDataVacina] = useState('');
     const [proxVacina, setProxVacina] = useState('');
@@ -69,9 +70,8 @@ export const EditarVacina = (props) => {
     const [pathFoto, setPathFoto] = useState('');
 
     useEffect(() => {
-        getDoc(doc(db, "MyHealth", `${props.route.params.id}`))
+        getDoc(doc(db, "MyHealth", `${idVacina}`))
             .then((doc) => {
-                setIdVacina(props.route.params.id)
                 setDataVacina(doc.data().dataVacina)
                 setProxVacina((doc.data().proxVacina) ? (doc.data().proxVacina) : '')
                 setNome(doc.data().nome)
@@ -82,7 +82,7 @@ export const EditarVacina = (props) => {
             .catch((error) => {
                 console.log("Erro: " + error)
             })
-    }, [props.route.params.id])
+    }, [idVacina])
 
     const showImagePicker = () => {
         launchImageLibrary()
