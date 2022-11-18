@@ -4,12 +4,17 @@ import { FlatList, ScrollView, Text, TouchableOpacity } from 'react-native'
 import CardVacina from '../../components/CardVacina';
 import styles from './styles';
 import { db } from '../../config/firebase';
-import { collection, onSnapshot, query } from 'firebase/firestore';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { useSelector } from 'react-redux';
 
 export const Home = (props) => {
 
     const [vacinas, setVacinas] = useState([]);
     const [pesquisa, setPesquisa] = useState([]);
+
+    const idUsuario = useSelector((state) => state.usuario.id)
+
+    console.log(idUsuario);
 
     useEffect(() => {
 
@@ -17,7 +22,7 @@ export const Home = (props) => {
 
         const colecaoVacinas = []
 
-        const q = query(collection(db, "MyHealth"));
+        const q = query(collection(db, "MyHealth"), where('idUsuario', '==', idUsuario));
 
         onSnapshot(q, (result) => {
             result.forEach((doc) => {
