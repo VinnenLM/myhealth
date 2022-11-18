@@ -81,7 +81,7 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator>
 
-          {/* <Stack.Screen
+          <Stack.Screen
             name="Inicial"
             component={Inicial}
             options={
@@ -91,7 +91,7 @@ const App = () => {
                 headerTintColor: 'white',
                 headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
                 headerShown: false
-              }} /> */}
+              }} />
 
           <Stack.Screen name="HomeNavigator" component={HomeNavigator} options={{ headerShown: false }} />
 
