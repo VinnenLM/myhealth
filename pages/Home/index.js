@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Searchbar } from 'react-native-paper';
-import { FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, ScrollView, Text, TouchableOpacity } from 'react-native'
 import CardVacina from '../../components/CardVacina';
 import styles from './styles';
 import { db } from '../../config/firebase';

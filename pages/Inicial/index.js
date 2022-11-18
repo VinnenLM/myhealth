@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Image, ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { ActivityIndicator } from 'react-native-paper';
 import styles from './styles'
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { reducerSetUsuario } from '../../redux/usuarioSlice';
 
 import { app, db } from "../../config/firebase";
-import { collection, doc, documentId, getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 
 export const Inicial = (props) => {
     const [email, setEmail] = useState('');
@@ -18,16 +18,15 @@ export const Inicial = (props) => {
     const [loading, setLoading] = useState(false)
 
     const dispatch = useDispatch();
-    //dispatch(reducerSetUsuario({ nome: doc.data().nome, id: doc.id }))
 
     const buscarUsuario = (id) => {
-        getDoc(doc(db, "User",`"${id}"`))
-        .then((doc) => {
-            dispatch(reducerSetUsuario({ nome: doc.data().nome, id: doc.id }))
-        })
-        .catch((error) => {
-            console.log("Erro: " + error)
-        })
+        getDoc(doc(db, "User", `"${id}"`))
+            .then((doc) => {
+                dispatch(reducerSetUsuario({ nome: doc.data().nome, id: doc.id }))
+            })
+            .catch((error) => {
+                console.log("Erro: " + error)
+            })
     }
 
     const autenticar = () => {
