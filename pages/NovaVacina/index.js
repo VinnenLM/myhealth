@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { RadioButton } from 'react-native-paper';
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import MaskInput, { Masks } from 'react-native-mask-input';
 import { db, storage } from '../../config/firebase'
 import { addDoc, collection } from "firebase/firestore"
@@ -16,30 +16,41 @@ export const NovaVacina = (props) => {
 
     const salvarVacina = async () => {
 
-        const file = await fetch(comprovante)
-        const blob = await file.blob()
+        if (comprovante) {
+            const file = await fetch(comprovante)
+            const blob = await file.blob()
 
-        const filename = "images/" + comprovante.split("-")[comprovante.split("-").length - 1]
+            const filename = "images/" + comprovante.split("-")[comprovante.split("-").length - 1]
 
-        uploadBytes(ref(storage, filename), blob)
-            .then((resposta) => {
-                getDownloadURL(ref(storage, resposta.ref.fullPath))
-                    .then((urlDownload) => {
-                        addDoc(collection(db, "MyHealth"), {
-                            nome: nome,
-                            dataVacina: dataVacina,
-                            dose: dose,
-                            proxVacina: proxVacina,
-                            comprovante: urlDownload,
-                            pathFoto: filename,
-                            idUsuario: idUsuario
-                        })
-                        props.navigation.navigate('Minhas Vacinas')
+            if (nome && dataVacina && dose) {
+
+                uploadBytes(ref(storage, filename), blob)
+                    .then((resposta) => {
+                        getDownloadURL(ref(storage, resposta.ref.fullPath))
+                            .then((urlDownload) => {
+                                addDoc(collection(db, "MyHealth"), {
+                                    nome: nome,
+                                    dataVacina: dataVacina,
+                                    dose: dose,
+                                    proxVacina: proxVacina,
+                                    comprovante: urlDownload,
+                                    pathFoto: filename,
+                                    idUsuario: idUsuario
+                                })
+                                props.navigation.navigate('Minhas Vacinas')
+                            })
+                            .catch((error) => {
+                                console.log("Erro ao fazer upload do arquivo: " + error)
+                            })
                     })
-                    .catch((error) => {
-                        console.log("Erro ao fazer upload do arquivo: " + error)
-                    })
-            })
+            } else {
+                setModalVisible(true);
+            }
+
+        } else {
+            setModalVisible(true);
+        }
+
     }
 
     const showImagePicker = () => {
@@ -62,6 +73,7 @@ export const NovaVacina = (props) => {
             })
     }
 
+    const [modalVisible, setModalVisible] = useState(false);
     const [dose, setDose] = useState('');
     const [nome, setNome] = useState('');
     const [dataVacina, setDataVacina] = useState('');
@@ -83,6 +95,24 @@ export const NovaVacina = (props) => {
 
     return (
         <View style={styles.background}>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Preencha os campos corretamente</Text>
+                        <View style={styles.modalButtons}>
+                            <TouchableOpacity
+                                style={[styles.button, styles.buttonAceitar]}
+                                onPress={() => setModalVisible(!modalVisible)}>
+                                <Text style={styles.textStyle}>OK</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
 
             <View>
 

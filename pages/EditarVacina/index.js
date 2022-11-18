@@ -15,30 +15,41 @@ export const EditarVacina = (props) => {
     const idVacina = useSelector((state) => state.vacina.id)
 
     const editarVacina = async () => {
-        const file = await fetch(comprovante)
-        const blob = await file.blob()
 
-        uploadBytes(ref(storage, pathFoto), blob)
-            .then((resposta) => {
-                getDownloadURL(ref(storage, resposta.ref.fullPath))
-                    .then((urlDownload) => {
-                        updateDoc(doc(db, "MyHealth", idVacina), {
-                            nome: nome,
-                            dataVacina: dataVacina,
-                            dose: dose,
-                            proxVacina: proxVacina,
-                            comprovante: urlDownload,
-                            pathFoto: pathFoto,
-                            idUsuario: idUsuario
-                        })
-                            .then((retorno) => {
-                                props.navigation.navigate('Minhas Vacinas')
-                            })
-                            .catch((error) => {
-                                console.log("Error: " + error)
+        if (comprovante) {
+
+            const file = await fetch(comprovante)
+            const blob = await file.blob()
+
+            if (nome && dataVacina && dose) {
+
+                uploadBytes(ref(storage, pathFoto), blob)
+                    .then((resposta) => {
+                        getDownloadURL(ref(storage, resposta.ref.fullPath))
+                            .then((urlDownload) => {
+                                updateDoc(doc(db, "MyHealth", idVacina), {
+                                    nome: nome,
+                                    dataVacina: dataVacina,
+                                    dose: dose,
+                                    proxVacina: proxVacina,
+                                    comprovante: urlDownload,
+                                    pathFoto: pathFoto,
+                                    idUsuario: idUsuario
+                                })
+                                    .then((retorno) => {
+                                        props.navigation.navigate('Minhas Vacinas')
+                                    })
+                                    .catch((error) => {
+                                        console.log("Error: " + error)
+                                    })
                             })
                     })
-            })
+            } else {
+                setModalVerificar(true);
+            }
+        } else {
+            setModalVerificar(true);
+        }
     }
 
     const excluirVacina = () => {
@@ -62,6 +73,7 @@ export const EditarVacina = (props) => {
     const idUsuario = useSelector((state) => state.usuario.id)
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalVerificar, setModalVerificar] = useState(false);
     const [dose, setDose] = useState('');
     const [dataVacina, setDataVacina] = useState('');
     const [proxVacina, setProxVacina] = useState('');
@@ -125,6 +137,24 @@ export const EditarVacina = (props) => {
                                 style={[styles.button, styles.buttonCancelar]}
                                 onPress={() => setModalVisible(!modalVisible)}>
                                 <Text style={styles.textStyle}>CANCELAR</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVerificar}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Preencha os campos corretamente</Text>
+                        <View style={styles.modalButtons}>
+                            <TouchableOpacity
+                                style={[styles.button, styles.buttonCancelar]}
+                                onPress={() => setModalVerificar(!modalVerificar)}>
+                                <Text style={styles.textStyle}>OK</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
