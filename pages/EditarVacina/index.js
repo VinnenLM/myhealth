@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { RadioButton } from 'react-native-paper';
-import { Modal, Text, TextInput, TouchableOpacity, View, Image } from 'react-native'
+import { Modal, Text, TextInput, TouchableOpacity, View, Image, ScrollView } from 'react-native'
 import MaskInput, { Masks } from 'react-native-mask-input';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
 import { useSelector } from 'react-redux';
@@ -10,9 +10,43 @@ import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage
 import PlaceHolder from '../../assets/imgs/placeholder.jpg'
 import styles from './styles'
 
+import Geolocation from '@react-native-community/geolocation';
+import MapView, { Marker } from 'react-native-maps'
+
 export const EditarVacina = (props) => {
 
     const idVacina = useSelector((state) => state.vacina.id)
+    const idUsuario = useSelector((state) => state.usuario.id)
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVerificar, setModalVerificar] = useState(false);
+    const [dose, setDose] = useState('');
+    const [dataVacina, setDataVacina] = useState('');
+    const [proxVacina, setProxVacina] = useState('');
+    const [nome, setNome] = useState('');
+    const [comprovante, setComprovante] = useState('');
+    const [pathFoto, setPathFoto] = useState('');
+    const [latitude, setLatitude] = useState(0)
+    const [longitude, setLongitude] = useState(0)
+
+    useEffect(() => {
+
+        getDoc(doc(db, "MyHealth", `${idVacina}`))
+            .then((doc) => {
+                setDataVacina(doc.data().dataVacina)
+                setProxVacina((doc.data().proxVacina) ? (doc.data().proxVacina) : '')
+                setNome(doc.data().nome)
+                setDose(doc.data().dose)
+                setComprovante(doc.data().comprovante)
+                setPathFoto(doc.data().pathFoto)
+                setLatitude(doc.data().latitude)
+                setLongitude(doc.data().longitude)
+            })
+            .catch((error) => {
+                console.log("Erro: " + error)
+            })
+
+    }, [idVacina])
 
     const editarVacina = async () => {
 
@@ -36,7 +70,7 @@ export const EditarVacina = (props) => {
                                     pathFoto: pathFoto,
                                     idUsuario: idUsuario
                                 })
-                                    .then((retorno) => {
+                                    .then((res) => {
                                         props.navigation.navigate('Minhas Vacinas')
                                     })
                                     .catch((error) => {
@@ -44,11 +78,16 @@ export const EditarVacina = (props) => {
                                     })
                             })
                     })
+
             } else {
+
                 setModalVerificar(true);
+
             }
         } else {
+
             setModalVerificar(true);
+
         }
     }
 
@@ -67,36 +106,10 @@ export const EditarVacina = (props) => {
                 console.log("Erro ao excluir a imagem." + error)
             })
 
-
     }
 
-    const idUsuario = useSelector((state) => state.usuario.id)
-
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalVerificar, setModalVerificar] = useState(false);
-    const [dose, setDose] = useState('');
-    const [dataVacina, setDataVacina] = useState('');
-    const [proxVacina, setProxVacina] = useState('');
-    const [nome, setNome] = useState('');
-    const [comprovante, setComprovante] = useState('');
-    const [pathFoto, setPathFoto] = useState('');
-
-    useEffect(() => {
-        getDoc(doc(db, "MyHealth", `${idVacina}`))
-            .then((doc) => {
-                setDataVacina(doc.data().dataVacina)
-                setProxVacina((doc.data().proxVacina) ? (doc.data().proxVacina) : '')
-                setNome(doc.data().nome)
-                setDose(doc.data().dose)
-                setComprovante(doc.data().comprovante)
-                setPathFoto(doc.data().pathFoto)
-            })
-            .catch((error) => {
-                console.log("Erro: " + error)
-            })
-    }, [idVacina])
-
     const showImagePicker = () => {
+
         launchImageLibrary()
             .then((result) => {
                 setComprovante(result.assets[0].uri)
@@ -104,9 +117,11 @@ export const EditarVacina = (props) => {
             .catch((error) => {
                 console.log("Erro ao capturar imagem: " + error)
             })
+
     }
 
     const showCamera = () => {
+
         launchCamera()
             .then((result) => {
                 setComprovante(result.assets[0].uri)
@@ -114,11 +129,19 @@ export const EditarVacina = (props) => {
             .catch((error) => {
                 console.log("Erro ao capturar imagem: " + error)
             })
+
+    }
+
+    const touchOnMap = (e) => {
+
+        setLatitude(e.nativeEvent.coordinate.latitude)
+        setLongitude(e.nativeEvent.coordinate.longitude)
+
     }
 
     return (
 
-        <View style={styles.background}>
+        <ScrollView style={styles.background} contentContainerStyle={{ alignItems: "center", }}>
 
             <Modal
                 animationType="slide"
@@ -189,7 +212,7 @@ export const EditarVacina = (props) => {
                                 status={dose === '1a. dose' ? 'checked' : 'unchecked'}
                                 onPress={() => setDose('1a. dose')}
                             />
-                            <Text style={styles.label}>1a. dose</Text>
+                            <Text style={styles.radioLabel}>1a. dose</Text>
                         </View>
                         <View style={styles.containerRadios}>
                             <RadioButton
@@ -198,7 +221,7 @@ export const EditarVacina = (props) => {
                                 status={dose === '2a. dose' ? 'checked' : 'unchecked'}
                                 onPress={() => setDose('2a. dose')}
                             />
-                            <Text style={{ width: 75, margin: 5, color: 'white', fontSize: 15, marginLeft: 'auto', }}>2a. dose</Text>
+                            <Text style={{ width: 71, margin: 5, color: 'white', fontSize: 14, marginLeft: 'auto', }}>2a. dose</Text>
                         </View>
                         <View style={styles.containerRadios}>
                             <RadioButton
@@ -207,7 +230,7 @@ export const EditarVacina = (props) => {
                                 status={dose === '3a. dose' ? 'checked' : 'unchecked'}
                                 onPress={() => setDose('3a. dose')}
                             />
-                            <Text style={styles.label}>3a. dose</Text>
+                            <Text style={styles.radioLabel}>3a. dose</Text>
                         </View>
                         <View style={styles.containerRadios}>
                             <RadioButton
@@ -216,7 +239,7 @@ export const EditarVacina = (props) => {
                                 status={dose === 'Dose única' ? 'checked' : 'unchecked'}
                                 onPress={() => setDose('Dose única')}
                             />
-                            <Text style={styles.label}>Dose única</Text>
+                            <Text style={styles.radioLabel}>Dose Única</Text>
                         </View>
                     </View>
                 </View>
@@ -257,6 +280,25 @@ export const EditarVacina = (props) => {
                     />
                 </View>
 
+                <View style={styles.container}>
+                    <Text style={styles.label}>Localização</Text>
+                    <MapView
+                        onPress={(e) => touchOnMap(e)}
+                        loadingEnabled={true}
+                        region={{
+                            latitude: latitude,
+                            longitude: longitude,
+                            latitudeDelta: 0.005,
+                            longitudeDelta: 0.005
+                        }}
+                        style={{ width: 200, height: 200, elevation: 5, flex: 1 }}>
+                        <Marker
+                            coordinate={{ latitude: latitude, longitude: longitude }}
+                            pinColor={"red"}
+                        />
+                    </MapView>
+                </View>
+
             </View>
 
             <TouchableOpacity onPress={() => editarVacina()}>
@@ -271,6 +313,6 @@ export const EditarVacina = (props) => {
                 </Text>
             </TouchableOpacity>
 
-        </View>
+        </ScrollView>
     );
 }

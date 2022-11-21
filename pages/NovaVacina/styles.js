@@ -9,7 +9,6 @@ export default StyleSheet.create({
     container: {
         flexDirection: 'row',
         marginBottom: 20,
-        paddingRight: 5
     },
     containerRadio: {
         width: 210,

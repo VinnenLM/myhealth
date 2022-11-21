@@ -259,7 +259,6 @@ export const NovaVacina = (props) => {
                             pinColor={"red"}
                         />
                     </MapView>
-
                 </View>
 
             </View>
