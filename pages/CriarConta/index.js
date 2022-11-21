@@ -21,7 +21,7 @@ export const CriarConta = (props) => {
         const auth = getAuth(app);
         createUserWithEmailAndPassword(auth, email, senha)
             .then((userRecord) => {
-                salvarUsuario(JSON.stringify(userRecord.user.uid))
+                salvarUsuario(userRecord.user.uid)
                 props.navigation.pop()
             })
             .catch((error) => {

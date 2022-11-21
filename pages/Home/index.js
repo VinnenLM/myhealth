@@ -36,7 +36,7 @@ export const Home = (props) => {
         })
         //})
 
-    }, [pesquisa]);
+    }, [idUsuario, pesquisa]);
 
     const showNovaVacina = () => {
         props.navigation.navigate('HomeNavigator', { screen: 'Nova Vacina' });

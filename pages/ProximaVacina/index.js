@@ -1,12 +1,14 @@
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { useSelector } from 'react-redux';
 import CardProximaVacina from '../../components/CardProximaVacina';
 import { db } from '../../config/firebase';
 import styles from './styles'
 
 export const ProximaVacina = (props) => {
 
+    const idUsuario = useSelector((state) => state.usuario.id)
     const [vacinas, setVacinas] = useState([])
 
     useEffect(() => {
@@ -20,10 +22,12 @@ export const ProximaVacina = (props) => {
 
             onSnapshot(q, (result) => {
                 result.forEach((doc) => {
-                    colecaoVacinas.push({
-                        ...doc.data(),
-                        id: doc.id
-                    })
+                    if (doc.idUsuario == idUsuario) {
+                        colecaoVacinas.push({
+                            ...doc.data(),
+                            id: doc.id
+                        })
+                    }
                 });
                 setVacinas(colecaoVacinas)
             });

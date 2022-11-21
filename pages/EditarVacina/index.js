@@ -10,7 +10,6 @@ import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage
 import PlaceHolder from '../../assets/imgs/placeholder.jpg'
 import styles from './styles'
 
-import Geolocation from '@react-native-community/geolocation';
 import MapView, { Marker } from 'react-native-maps'
 
 export const EditarVacina = (props) => {
@@ -31,7 +30,7 @@ export const EditarVacina = (props) => {
 
     useEffect(() => {
 
-        getDoc(doc(db, "MyHealth", `${idVacina}`))
+        getDoc(doc(db, "MyHealth", idVacina))
             .then((doc) => {
                 setDataVacina(doc.data().dataVacina)
                 setProxVacina((doc.data().proxVacina) ? (doc.data().proxVacina) : '')

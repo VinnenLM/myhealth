@@ -20,7 +20,7 @@ export const Inicial = (props) => {
     const dispatch = useDispatch();
 
     const buscarUsuario = (id) => {
-        getDoc(doc(db, "User", `"${id}"`))
+        getDoc(doc(db, "User", id))
             .then((doc) => {
                 dispatch(reducerSetUsuario({ nome: doc.data().nome, id: doc.id }))
             })
@@ -35,13 +35,12 @@ export const Inicial = (props) => {
         signInWithEmailAndPassword(auth, email, senha)
             .then((res) => {
                 buscarUsuario(res.user.uid)
-                setMsg('Deu bom')
+                setMsg('')
                 setLoading(false)
                 showHome()
             })
             .catch((error) => {
                 setLoading(false)
-                console.log("Erro ao autenticar: " + error)
                 setMsg('E-mail e/ou senha inválidos.')
             });
     }
