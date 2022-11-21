@@ -4,8 +4,9 @@ import { reducerSetVacina } from '../../redux/vacinaSlice'
 
 const CardProximaVacina = (props) => {
 
+    const dispatch = useDispatch();
+
     function showEditarVacina() {
-        const dispatch = useDispatch();
         dispatch(reducerSetVacina({ id: props.item.id }))
         props.navigation.navigate('Editar Vacina')
     }

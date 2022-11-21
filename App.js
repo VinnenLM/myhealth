@@ -41,15 +41,6 @@ const HomeNavigator = () => {
         headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
       }} />
 
-      <Drawer.Screen name="Sair" component={Inicial}
-        options={{
-          drawerIcon: () => <Image source={require('./assets/imgs/sair.png')} style={{ height: '120%', width: '15%' }} />,
-          headerStyle: { backgroundColor: '#c0e7e2' },
-          headerTintColor: '#add4d1',
-          headerTitleStyle: { fontWeight: 'bold', fontSize: 30, color: '#429ed5' },
-          headerShown: false
-        }} />
-
       <Drawer.Screen name="Nova Vacina" component={NovaVacina} options={{
         title: "Minhas Vacinas",
         drawerItemStyle: { height: 0 },

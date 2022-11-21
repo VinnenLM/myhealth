@@ -19,22 +19,13 @@ export const Inicial = (props) => {
 
     const dispatch = useDispatch();
 
-    const buscarUsuario = (id) => {
-        getDoc(doc(db, "User", id))
-            .then((doc) => {
-                dispatch(reducerSetUsuario({ nome: doc.data().nome, id: doc.id }))
-            })
-            .catch((error) => {
-                console.log("Erro: " + error)
-            })
-    }
-
     const autenticar = () => {
         setLoading(true)
         const auth = getAuth(app);
         signInWithEmailAndPassword(auth, email, senha)
             .then((res) => {
-                buscarUsuario(res.user.uid)
+                //buscarUsuario(res.user.uid)
+                dispatch(reducerSetUsuario({ id: res.user.uid }))
                 setMsg('')
                 setLoading(false)
                 showHome()
@@ -46,7 +37,7 @@ export const Inicial = (props) => {
     }
 
     const showHome = () => {
-        props.navigation.navigate('HomeNavigator', { screen: 'Minhas Vacinas' });
+        props.navigation.push('HomeNavigator');
     }
 
     const showCriarConta = () => {

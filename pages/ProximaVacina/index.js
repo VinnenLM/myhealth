@@ -8,33 +8,27 @@ import styles from './styles'
 
 export const ProximaVacina = (props) => {
 
-    const idUsuario = useSelector((state) => state.usuario.id)
+    const idUser = useSelector((state) => state.usuario.id)
     const [vacinas, setVacinas] = useState([])
 
     useEffect(() => {
 
-        props.navigation.addListener('focus', () => {
+        const q = query(collection(db, "MyHealth"), where('proxVacina', '!=', ''));
 
-            setVacinas([]);
+        onSnapshot(q, (result) => {
             const colecaoVacinas = []
-
-            const q = query(collection(db, "MyHealth"), where('proxVacina', '!=', ''));
-
-            onSnapshot(q, (result) => {
-                result.forEach((doc) => {
-                    if (doc.idUsuario == idUsuario) {
-                        colecaoVacinas.push({
-                            ...doc.data(),
-                            id: doc.id
-                        })
-                    }
-                });
-                setVacinas(colecaoVacinas)
+            result.forEach((doc) => {
+                if (doc.data().idUsuario == idUser) {
+                    colecaoVacinas.push({
+                        ...doc.data(),
+                        id: doc.id
+                    })
+                }
             });
-
+            setVacinas(colecaoVacinas)
         });
 
-    }, [vacinas]);
+    }, []);
 
     const showNovaVacina = () => {
         props.navigation.navigate('HomeNavigator', { screen: 'Nova Vacina' });

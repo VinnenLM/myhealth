@@ -4,8 +4,9 @@ import { FlatList, ScrollView, Text, TouchableOpacity } from 'react-native'
 import CardVacina from '../../components/CardVacina';
 import styles from './styles';
 import { db } from '../../config/firebase';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
-import { useSelector } from 'react-redux';
+import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore';
+import { useDispatch, useSelector } from 'react-redux';
+import { reducerSetUsuario } from '../../redux/usuarioSlice';
 
 export const Home = (props) => {
 
@@ -13,30 +14,33 @@ export const Home = (props) => {
     const [pesquisa, setPesquisa] = useState([]);
 
     const idUsuario = useSelector((state) => state.usuario.id)
+    const dispatch = useDispatch();
 
     useEffect(() => {
 
-        //props.navigation.addListener('focus', () => {
-
-        const colecaoVacinas = []
+        getDoc(doc(db, "User", idUsuario))
+            .then((doc) => {
+                dispatch(reducerSetUsuario({ nome: doc.data().nome, id: doc.id }))
+            })
+            .catch((error) => {
+                console.log("Erro: " + error)
+            })
 
         const q = query(collection(db, "MyHealth"), where('idUsuario', '==', idUsuario));
 
         onSnapshot(q, (result) => {
+            const colecaoVacinas = []
             result.forEach((doc) => {
-                if (doc.data().nome.indexOf(pesquisa) >= 0) {
-                    const vacina = {
-                        ...doc.data(),
-                        id: doc.id
-                    }
-                    colecaoVacinas.push(vacina)
+                const vacina = {
+                    ...doc.data(),
+                    id: doc.id
                 }
+                colecaoVacinas.push(vacina)
             })
             setVacinas(colecaoVacinas)
         })
-        //})
 
-    }, [idUsuario, pesquisa]);
+    }, []);
 
     const showNovaVacina = () => {
         props.navigation.navigate('HomeNavigator', { screen: 'Nova Vacina' });
@@ -53,7 +57,7 @@ export const Home = (props) => {
             />
 
             <ScrollView horizontal={true} contentContainerStyle={{ flexDirection: 'row', width: '100%' }}>
-                <FlatList data={vacinas} renderItem={({ item }) => <CardVacina item={item} navigation={props.navigation} />} keyExtractor={item => item.id} numColumns={2} />
+                <FlatList data={vacinas.filter((vacina) => vacina.nome.includes(pesquisa))} renderItem={({ item }) => <CardVacina item={item} navigation={props.navigation} />} keyExtractor={item => item.id} numColumns={2} />
             </ScrollView >
 
             <TouchableOpacity onPress={showNovaVacina}>
