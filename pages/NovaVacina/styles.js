@@ -4,21 +4,22 @@ export default StyleSheet.create({
     background: {
         backgroundColor: '#add4d1',
         flex: 1,
-        alignItems: "center",
-        paddingTop: 30
+        paddingTop: 20,
     },
     container: {
         flexDirection: 'row',
         marginBottom: 20,
+        paddingRight: 5
     },
     containerRadio: {
-        width: 252,
+        width: 210,
         flexDirection: 'row',
         justifyContent: 'space-between',
         flexWrap: "wrap"
     },
     containerRadios: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
         marginBottom: -10
     },
     label: {
@@ -27,16 +28,23 @@ export default StyleSheet.create({
         fontSize: 15,
         marginLeft: 'auto',
     },
+    radioLabel: {
+        margin: 5,
+        color: 'white',
+        fontSize: 14,
+        marginLeft: 'auto',
+    },
     input: {
         backgroundColor: 'white',
-        width: 250,
+        width: 200,
         height: 30,
         fontSize: 15,
         color: '#499dcd',
         paddingBottom: 5
     },
     btnCadastrar: {
-        marginTop: 50,
+        marginTop: 10,
+        marginBottom: 50,
         backgroundColor: 'green',
         textAlign: 'center',
         paddingVertical: 10,
@@ -62,7 +70,7 @@ export default StyleSheet.create({
         fontSize: 15,
     },
     containerImagem: {
-        width: 249,
+        width: 200,
         textAlign: 'center',
         flexDirection: 'column',
         color: 'white',
@@ -122,5 +130,5 @@ export default StyleSheet.create({
         marginBottom: 10,
         textAlign: "center",
         color: '#ff8383'
-    },
+    }
 });

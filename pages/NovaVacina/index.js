@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { RadioButton } from 'react-native-paper';
-import { Image, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import MaskInput, { Masks } from 'react-native-mask-input';
 import { db, storage } from '../../config/firebase'
 import { addDoc, collection } from "firebase/firestore"
@@ -10,9 +10,59 @@ import { useSelector } from 'react-redux';
 import PlaceHolder from '../../assets/imgs/placeholder.jpg'
 import styles from './styles';
 
+import Geolocation from '@react-native-community/geolocation';
+import MapView, { Marker } from 'react-native-maps'
+
 export const NovaVacina = (props) => {
 
     const idUsuario = useSelector((state) => state.usuario.id)
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [dose, setDose] = useState('');
+    const [nome, setNome] = useState('');
+    const [dataVacina, setDataVacina] = useState('');
+    const [proxVacina, setProxVacina] = useState('');
+    const [comprovante, setComprovante] = useState('');
+    const [latitude, setLatitude] = useState(0)
+    const [longitude, setLongitude] = useState(0)
+
+    useEffect(() => {
+        Geolocation.watchPosition((position) => {
+            setLatitude(position.coords.latitude)
+            setLongitude(position.coords.longitude)
+        },
+            (error) => {
+                alert(error)
+            },
+            {
+                distanceFilter: 1
+            }
+        )
+    }, [])
+
+    const getLocation = () => {
+        Geolocation.getCurrentPosition((position) => {
+            setLatitude(position.coords.latitude)
+            setLongitude(position.coords.longitude)
+        })
+    }
+
+    const touchOnMap = (e) => {
+        setLatitude(e.nativeEvent.coordinate.latitude)
+        setLongitude(e.nativeEvent.coordinate.longitude)
+    }
+
+    useEffect(() => {
+        props.navigation.addListener('focus', () => {
+            getLocation()
+            setDose('')
+            setNome('')
+            setDataVacina('')
+            setProxVacina('')
+            setComprovante('')
+        });
+
+    }, []);
 
     const salvarVacina = async () => {
 
@@ -35,7 +85,9 @@ export const NovaVacina = (props) => {
                                     proxVacina: proxVacina,
                                     comprovante: urlDownload,
                                     pathFoto: filename,
-                                    idUsuario: idUsuario
+                                    idUsuario: idUsuario,
+                                    latitude: latitude,
+                                    longitude: longitude
                                 })
                                 props.navigation.navigate('Minhas Vacinas')
                             })
@@ -73,28 +125,8 @@ export const NovaVacina = (props) => {
             })
     }
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const [dose, setDose] = useState('');
-    const [nome, setNome] = useState('');
-    const [dataVacina, setDataVacina] = useState('');
-    const [proxVacina, setProxVacina] = useState('');
-    const [comprovante, setComprovante] = useState('');
-
-    useEffect(() => {
-
-        props.navigation.addListener('focus', () => {
-            setDose('')
-            setNome('')
-            setDataVacina('')
-            setProxVacina('')
-            setComprovante('')
-        });
-
-    }, []);
-
-
     return (
-        <View style={styles.background}>
+        <ScrollView style={styles.background} contentContainerStyle={{ alignItems: "center", }}>
 
             <Modal
                 animationType="slide"
@@ -143,7 +175,7 @@ export const NovaVacina = (props) => {
                                 status={dose === '1a. dose' ? 'checked' : 'unchecked'}
                                 onPress={() => setDose('1a. dose')}
                             />
-                            <Text style={styles.label}>1a. dose</Text>
+                            <Text style={styles.radioLabel}>1a. dose</Text>
                         </View>
                         <View style={styles.containerRadios}>
                             <RadioButton
@@ -152,7 +184,7 @@ export const NovaVacina = (props) => {
                                 status={dose === '2a. dose' ? 'checked' : 'unchecked'}
                                 onPress={() => setDose('2a. dose')}
                             />
-                            <Text style={{ width: 75, margin: 5, color: 'white', fontSize: 15, marginLeft: 'auto', }}>2a. dose</Text>
+                            <Text style={{ width: 71, margin: 5, color: 'white', fontSize: 14, marginLeft: 'auto', }}>2a. dose</Text>
                         </View>
                         <View style={styles.containerRadios}>
                             <RadioButton
@@ -161,7 +193,7 @@ export const NovaVacina = (props) => {
                                 status={dose === '3a. dose' ? 'checked' : 'unchecked'}
                                 onPress={() => setDose('3a. dose')}
                             />
-                            <Text style={styles.label}>3a. dose</Text>
+                            <Text style={styles.radioLabel}>3a. dose</Text>
                         </View>
                         <View style={styles.containerRadios}>
                             <RadioButton
@@ -170,7 +202,7 @@ export const NovaVacina = (props) => {
                                 status={dose === 'Dose única' ? 'checked' : 'unchecked'}
                                 onPress={() => setDose('Dose única')}
                             />
-                            <Text style={styles.label}>Dose única</Text>
+                            <Text style={styles.radioLabel}>Dose Única</Text>
                         </View>
                     </View>
                 </View>
@@ -210,6 +242,26 @@ export const NovaVacina = (props) => {
                     />
                 </View>
 
+                <View style={styles.container}>
+                    <Text style={styles.label}>Localização</Text>
+                    <MapView
+                        onPress={(e) => touchOnMap(e)}
+                        loadingEnabled={true}
+                        region={{
+                            latitude: latitude,
+                            longitude: longitude,
+                            latitudeDelta: 0.005,
+                            longitudeDelta: 0.005
+                        }}
+                        style={{ width: 200, height: 200, elevation: 5, flex: 1 }}>
+                        <Marker
+                            coordinate={{ latitude: latitude, longitude: longitude }}
+                            pinColor={"red"}
+                        />
+                    </MapView>
+
+                </View>
+
             </View>
 
             <TouchableOpacity onPress={salvarVacina}>
@@ -218,6 +270,6 @@ export const NovaVacina = (props) => {
                 </Text>
             </TouchableOpacity>
 
-        </View>
+        </ScrollView>
     );
 }

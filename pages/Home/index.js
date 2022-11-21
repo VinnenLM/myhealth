@@ -14,8 +14,6 @@ export const Home = (props) => {
 
     const idUsuario = useSelector((state) => state.usuario.id)
 
-    console.log(idUsuario);
-
     useEffect(() => {
 
         //props.navigation.addListener('focus', () => {
